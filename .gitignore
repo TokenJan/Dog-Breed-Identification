@@ -112,3 +112,6 @@ sample_submission.csv
 
 # macos
 .DS_Store
+
+# pycharm
+.idea/
