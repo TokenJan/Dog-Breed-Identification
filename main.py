@@ -6,6 +6,7 @@ import numpy as np
 
 # internal import
 import utils.DataPreprocessing as datapre
+import cnn_main
 
 # load param configuration
 with open('config/param.yml', 'r') as yml_file:
@@ -33,3 +34,7 @@ else:
 
 # cross validation
 x_trainFold, y_trainFold, x_valFold, y_valFold  = datapre.crossVal(x_train, y_train, cfg['nFolds'])
+
+for iFold in range(cfg['nFolds']):
+    cnn_main.fRunCNN({'x_trainFold': x_trainFold, 'y_trainFold': y_trainFold, 'x_valFold': x_valFold, 'y_valFold':
+        y_valFold, 'x_test': x_test}, cfg['sModel'], cfg['lTrain'], cfg['lr'], cfg['batchSize'], cfg['epochs'])
