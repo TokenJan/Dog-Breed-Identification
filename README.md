@@ -19,13 +19,13 @@ root
 │   ├── labels.csv
 │   ├── sample_submission.csv
 │   ├── train
-│   ├── test
+│   └── test
 ├── dataset
 │   └── dataset.h5
-├── networks=
-│   ├── \_\_init\_\_.py
+├── networks
+│   ├── __init__.py
 │   └── model.py
 └── utils
     ├── DataPreprocessing.py
-    └── \_\_init\_\_.py
+    └── __init__.py
 ```
