@@ -1,28 +1,31 @@
 # Dog-Breed-Identification
-Determine the breed of a dog in an image
 
+A [competition](https://www.kaggle.com/c/dog-breed-identification) from Kaggle. Determine the breed of a dog in an image.
+
+## Create your own model
 
 create the model in networks folder and tune the parameters in config/param.yml file
 
 ## Structure
 
-root </br>
-├── README.md </br>
-├── config </br>
-│   └── param.yml </br> 
-├── main.py </br>
-├── cnn_main.py </br>
-├── input </br>
-│   ├── labels.csv </br>
-│   ├── sample_submission.csv </br>
-│   ├── train </br>
-│   ├── test </br>
-├── dataset </br>
-│   └── dataset.h5 </br> 
-├── networks </br>
-│   ├── \_\_init\_\_.py </br>
-│   └── model.py </br> 
-└── utils </br>
-    ├── DataPreprocessing.py </br>
-    └── \_\_init\_\_.py </br>
-
+```bash
+root
+├── README.md
+├── config
+│   └── param.yml
+├── main.py
+├── cnn_main.py 
+├── input (all the files are downloaded from Kaggle)
+│   ├── labels.csv
+│   ├── sample_submission.csv
+│   ├── train
+│   ├── test
+├── dataset
+│   └── dataset.h5
+├── networks=
+│   ├── \_\_init\_\_.py
+│   └── model.py
+└── utils
+    ├── DataPreprocessing.py
+    └── \_\_init\_\_.py
+```
