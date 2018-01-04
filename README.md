@@ -2,7 +2,7 @@
 Determine the breed of a dog in an image
 
 
-create the model in networks fold and tune the parameters in config/param.yml file
+create the model in networks folder and tune the parameters in config/param.yml file
 
 ## Structure
 
