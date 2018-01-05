@@ -106,6 +106,7 @@ test/
 train/
 labels.csv
 sample_submission.csv
+model/
 
 # exclude vscode file
 .vscode

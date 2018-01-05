@@ -11,7 +11,7 @@ def fPreprocessData(cfg):
 
     # load csv data
     df_train = pd.read_csv('./input/labels.csv')
-    df_test = pd.read_csv('./input/sample_submission.csv')
+    df_predict = pd.read_csv('./input/sample_submission.csv')
 
     targets_series = pd.Series(df_train['breed'])
     one_hot = pd.get_dummies(targets_series, sparse = True)
@@ -20,7 +20,7 @@ def fPreprocessData(cfg):
     # initialize the training and testing variable
     x_train = []
     y_train = []
-    x_test = []
+    x_predict = []
 
     for i, row in df_train.iterrows():
         img = cv2.imread('./input/train/{}.jpg'.format(row.id))
@@ -28,20 +28,20 @@ def fPreprocessData(cfg):
         x_train.append(cv2.resize(img, img_size))
         y_train.append(label)
         
-    for id in df_test['id'].values:
+    for id in df_predict['id'].values:
         img = cv2.imread('./input/test/{}.jpg'.format(id))
-        x_test.append(cv2.resize(img, img_size))
+        x_predict.append(cv2.resize(img, img_size))
 
     y_train = np.array(y_train, np.uint8)
     x_train = np.array(x_train, np.float32) / 255.
-    x_test  = np.array(x_test, np.float32) / 255.
+    x_predict  = np.array(x_predict, np.float32) / 255.
 
     with h5py.File('./dataset/dataset.h5', 'w') as hf:
         hf.create_dataset("x_train", data=x_train)
         hf.create_dataset("y_train", data=y_train)
-        hf.create_dataset("x_test", data=x_test)
+        hf.create_dataset("x_predict", data=x_predict)
 
-    return x_train, y_train, x_test
+    return x_train, y_train, x_predict
 
 def crossVal(x_data, y_data, nFolds):
     x_trainFold = []

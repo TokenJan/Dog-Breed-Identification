@@ -2,7 +2,7 @@ import importlib
 
 def fRunCNN(dData, dParam):
     # dynamic loading of corresponding model
-    cnnModel = importlib.import_module(dParam['sModel'], '.')
+    cnnModel = importlib.import_module('networks.' + dParam['sModel'], '.')
     # cnnModel = __import__(sModel, globals(), locals(), ['createModel', 'fTrain', 'fPredict'], -1)
 
     if dParam['lTrain']:
@@ -10,5 +10,5 @@ def fRunCNN(dData, dParam):
         cnnModel.fTrain(dData, dParam)
     else:
         # predict precess
-        cnnModel.fPredict(dData['x_test'], dParam['batchSize'])
+        cnnModel.fPredict(dData['x_predict'], dParam['batchSize'])
 
