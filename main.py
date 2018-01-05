@@ -32,9 +32,21 @@ else:
 # print(y_train.shape)
 # print(x_test.shape)
 
+# number of the classes
+nClass = y_train.shape[1]
+print(nClass)
+
 # cross validation
 x_trainFold, y_trainFold, x_valFold, y_valFold  = datapre.crossVal(x_train, y_train, cfg['nFolds'])
 
 for iFold in range(cfg['nFolds']):
-    cnn_main.fRunCNN({'x_trainFold': x_trainFold, 'y_trainFold': y_trainFold, 'x_valFold': x_valFold, 'y_valFold':
-        y_valFold, 'x_test': x_test}, cfg['sModel'], cfg['lTrain'], cfg['lr'], cfg['batchSize'], cfg['epochs'])
+    # initialize training, validation and test data dictionary
+    dData = {'x_train': x_trainFold[iFold], 'y_train': y_trainFold[iFold], 'x_val': x_valFold[iFold],
+             'y_val': y_valFold[iFold], 'x_test': x_test}
+
+    # initialize parameter dictionary
+    dParam = {'sModel': cfg['sModel'], 'lTrain': cfg['lTrain'], 'lr': cfg['lr'], 'batchSize': cfg['batchSize'],
+              'epochs': cfg['epochs'], 'img_size': cfg['img_size'], 'nClass': nClass}
+
+    # start training or predicting
+    cnn_main.fRunCNN(dData, dParam)

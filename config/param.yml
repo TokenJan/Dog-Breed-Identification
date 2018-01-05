@@ -5,4 +5,4 @@ lTrain: true
 lr: 0.01
 batchSize: 128
 epochs: 300
-sModel: 'networks.model'
+sModel: 'networks.VGG19'
