@@ -1,10 +1,10 @@
-nFolds: 10
+nFolds: 5
 img_size: [299, 299]
 lTrain: true
-lCrossval: false
-validSplit: 0.1
+lCrossval: true
+validSplit: 0.2
 lr: 0.001
 batchSize: 32
 epochs: 30
 sModel: 'InceptionResNetV2'
-sOpti: 'sgd'
+sOpti: 'adam'
