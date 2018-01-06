@@ -44,7 +44,7 @@ if cfg['lCrossval']:
                  'y_valid': y_validFold[iFold], 'x_predict': x_predict}
 
         # start training or predicting
-        cnn_main.fRunCNN(dData, cfg)
+        cnn_main.fRunCNN(dData, cfg, nClass)
 
 else:
     # split training data
@@ -55,4 +55,4 @@ else:
 
 
     # start training or predicting
-    cnn_main.fRunCNN(dData, cfg)
+    cnn_main.fRunCNN(dData, cfg, nClass)

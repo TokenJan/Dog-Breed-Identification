@@ -22,7 +22,7 @@ def createModel(img_size, nClass):
 
     return base_model, model
 
-def fTrain(dData, dParam):
+def fTrain(dData, dParam, nClass):
     model_name = './model/' + dParam['sModel'] + '_' + str(dParam['img_size'][0]) + str(dParam['img_size'][1]) + '_lr_'\
                  + str(dParam['lr']) + '_bs_' + str(dParam['batchSize'])
 
@@ -33,7 +33,7 @@ def fTrain(dData, dParam):
         model = load_model(model_all)
     else:
         # initialize the model
-        base_model, model = createModel(dParam['img_size'], dParam['nClass'])
+        base_model, model = createModel(dParam['img_size'], nClass)
 
         # First: train only the top layers (which were randomly initialized)
         for layer in base_model.layers:
