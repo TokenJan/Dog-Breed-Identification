@@ -59,7 +59,7 @@ else:
 
     # initialize parameter dictionary
     dParam = {'sModel': cfg['sModel'], 'lTrain': cfg['lTrain'], 'lr': cfg['lr'], 'batchSize': cfg['batchSize'],
-              'epochs': cfg['epochs'], 'img_size': cfg['img_size'], 'nClass': nClass}
+              'epochs': cfg['epochs'], 'img_size': cfg['img_size'], 'nClass': nClass, 'sOpti': cfg['sOpti']}
 
     # start training or predicting
     cnn_main.fRunCNN(dData, dParam)
