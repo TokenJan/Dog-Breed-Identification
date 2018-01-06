@@ -1,5 +1,5 @@
 nFolds: 10
-img_size: [350, 350]
+img_size: [200, 200]
 lTrain: true
 lCrossval: false
 validSplit: 0.1

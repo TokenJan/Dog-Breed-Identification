@@ -1,6 +1,7 @@
 from keras.applications.inception_resnet_v2 import InceptionResNetV2
-from keras.layers import Flatten, Dense
+from keras.layers import Flatten, Dense, Dropout
 from keras.models import Model, load_model
+from keras.layers.normalization import BatchNormalization
 import keras
 import glob
 
@@ -13,6 +14,12 @@ def creatModel(img_size, nClass):
     # Add a new top layer
     x = base_model.output
     x = Flatten()(x)
+    x = BatchNormalization()(x)
+    x = Dropout(0.8)(x)
+    x = Dense(512, activation='relu')(x)
+    x = BatchNormalization()(x)
+    x = Dropout(0.8)(x)
+
     predictions = Dense(nClass, activation='softmax')(x)
 
     # This is the model we will train
