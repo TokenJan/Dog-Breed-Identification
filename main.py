@@ -43,12 +43,8 @@ if cfg['lCrossval']:
         dData = {'x_train': x_trainFold[iFold], 'y_train': y_trainFold[iFold], 'x_valid': x_validFold[iFold],
                  'y_valid': y_validFold[iFold], 'x_predict': x_predict}
 
-        # initialize parameter dictionary
-        dParam = {'sModel': cfg['sModel'], 'lTrain': cfg['lTrain'], 'lr': cfg['lr'], 'batchSize': cfg['batchSize'],
-                  'epochs': cfg['epochs'], 'img_size': cfg['img_size'], 'nClass': nClass}
-
         # start training or predicting
-        cnn_main.fRunCNN(dData, dParam)
+        cnn_main.fRunCNN(dData, cfg)
 
 else:
     # split training data
@@ -57,9 +53,6 @@ else:
     # initialize training, validation and test data dictionary
     dData = {'x_train': x_train, 'y_train': y_train, 'x_valid': x_valid, 'y_valid': y_valid, 'x_predict': x_predict}
 
-    # initialize parameter dictionary
-    dParam = {'sModel': cfg['sModel'], 'lTrain': cfg['lTrain'], 'lr': cfg['lr'], 'batchSize': cfg['batchSize'],
-              'epochs': cfg['epochs'], 'img_size': cfg['img_size'], 'nClass': nClass, 'sOpti': cfg['sOpti']}
 
     # start training or predicting
-    cnn_main.fRunCNN(dData, dParam)
+    cnn_main.fRunCNN(dData, cfg)

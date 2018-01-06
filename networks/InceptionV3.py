@@ -1,21 +1,23 @@
-from keras.applications.vgg19 import VGG19
-from keras.layers import Flatten, Dense
+from keras.applications.inception_v3 import InceptionV3
+from keras.layers import Flatten, Dense, GlobalAveragePooling2D
 from keras.models import Model, load_model
 import keras
 import glob
 
 
-def creatModel(img_size, nClass):
+def createModel(img_size, nClass):
     # Create the base pre-trained model
 
-    base_model = VGG19(weights='imagenet', include_top=False, input_shape=(img_size[0], img_size[1], 3))
+    base_model = InceptionV3(weights='imagenet', include_top=False, input_shape=(img_size[0], img_size[1], 3))
 
     # Add a new top layer
     x = base_model.output
+    x = GlobalAveragePooling2D()(x)
     x = Flatten()(x)
+    x = Dense(1024, activation='relu')(x)
     predictions = Dense(nClass, activation='softmax')(x)
 
-    # This is the model to be train
+    # This is the model to be trained
     model = Model(inputs=base_model.input, outputs=predictions)
 
     return base_model, model
@@ -31,7 +33,7 @@ def fTrain(dData, dParam):
         model = load_model(model_all)
     else:
         # initialize the model
-        base_model, model = creatModel(dParam['img_size'], dParam['nClass'])
+        base_model, model = createModel(dParam['img_size'], dParam['nClass'])
 
         # First: train only the top layers (which were randomly initialized)
         for layer in base_model.layers:

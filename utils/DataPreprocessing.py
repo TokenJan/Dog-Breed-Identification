@@ -43,7 +43,7 @@ def fPreprocessData(cfg):
 
     return x_train, y_train, x_predict
 
-def crossVal(x_data, y_data, nFolds):
+def crossValid(x_data, y_data, nFolds):
     x_trainFold = []
     x_valFold = []
     y_trainFold = []

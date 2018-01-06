@@ -104,9 +104,8 @@ ENV/
 dataset/
 test/
 train/
-labels.csv
-sample_submission.csv
 model/
+input/
 
 # exclude vscode file
 .vscode
