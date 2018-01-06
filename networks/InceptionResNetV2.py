@@ -12,8 +12,13 @@ def addNewLayer(base_model, nClass):
     x = BatchNormalization()(x)
     x = Dropout(0.8)(x)
     x = Dense(1024, activation='relu')(x)
+    x = BatchNormalization()(x)
+    x = Dropout(0.8)(x)
+
     predictions = Dense(nClass, activation='softmax')(x)
-    model = Model(input=base_model.input, output=predictions)
+
+    model = Model(inputs=base_model.input, outputs=predictions)
+
     return model
 
 def fineTune(model, opti):
@@ -24,29 +29,34 @@ def fineTune(model, opti):
         layer.trainable = True
 
     if opti == 'sgd':
-        model.compile(optimizer=SGD(lr=0.0001, momentum=0.9), loss='categorical_crossentropy', metrics=['accuracy'])
+        model.compile(optimizer=SGD(lr=0.0001, momentum=0.9),
+                      loss='categorical_crossentropy',
+                      metrics=['accuracy'])
+
     elif opti == 'adam':
-        opti = keras.optimizers.Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=1e-08, decay=0.0)
+        optimizor = keras.optimizers.Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=1e-08, decay=0.0)
 
         model.compile(loss='categorical_crossentropy',
-                      optimizer=opti,
+                      optimizer=optimizor,
                       metrics=['accuracy'])
 
     return model
 
 def creatModel(img_size, nClass):
     # Create the base pre-trained model
+    base_model = InceptionResNetV2(weights='imagenet',
+                                   include_top=False,
+                                   input_shape=(img_size[0], img_size[1], 3))
 
-    base_model = InceptionResNetV2(weights='imagenet', include_top=False, input_shape=(img_size[0], img_size[1], 3))
-
+    # add last new layers
     model = addNewLayer(base_model, nClass)
 
-    return base_model, model
+    return model
 
 
 def fTrain(dData, dParam):
-    model_name = './model/' + dParam['sModel'] + '_' + str(dParam['img_size'][0]) + str(dParam['img_size'][1]) + '_lr_' \
-                 + str(dParam['lr']) + '_bs_' + str(dParam['batchSize'])
+    model_name = './model/' + dParam['sModel'] + '_' + str(dParam['img_size'][0]) + str(dParam['img_size'][1])\
+                 + '_lr_' + str(dParam['lr']) + '_bs_' + str(dParam['batchSize'])
 
     model_all = model_name + '_model.h5'
 
@@ -55,10 +65,7 @@ def fTrain(dData, dParam):
         model = load_model(model_all)
     else:
         # initialize the model
-        base_model, model = creatModel(dParam['img_size'], dParam['nClass'])
-
-        # add last layers
-        model = addNewLayer(base_model, model)
+        model = creatModel(dParam['img_size'], dParam['nClass'])
 
         # fine-tune
         model = fineTune(model, dParam['sOpti'])
