@@ -36,7 +36,7 @@ def fPreprocessData(cfg):
     x_train = np.array(x_train, np.float32) / 255.
     x_predict  = np.array(x_predict, np.float32) / 255.
 
-    with h5py.File('./dataset/dataset.h5', 'w') as hf:
+    with h5py.File('./dataset/dataset' + '_' + str(cfg['img_size'][0]) + '.h5', 'w') as hf:
         hf.create_dataset("x_train", data=x_train)
         hf.create_dataset("y_train", data=y_train)
         hf.create_dataset("x_predict", data=x_predict)

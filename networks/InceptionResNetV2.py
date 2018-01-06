@@ -1,4 +1,4 @@
-from keras.applications.vgg19 import VGG19
+from keras.applications.inception_resnet_v2 import InceptionResNetV2
 from keras.layers import Flatten, Dense
 from keras.models import Model, load_model
 import keras
@@ -8,7 +8,7 @@ import glob
 def creatModel(img_size, nClass):
     # Create the base pre-trained model
 
-    base_model = VGG19(weights='imagenet', include_top=False, input_shape=(img_size[0], img_size[1], 3))
+    base_model = InceptionResNetV2(weights='imagenet', include_top=False, input_shape=(img_size[0], img_size[1], 3))
 
     # Add a new top layer
     x = base_model.output
@@ -20,8 +20,9 @@ def creatModel(img_size, nClass):
 
     return base_model, model
 
+
 def fTrain(dData, dParam):
-    model_name = './model/' + dParam['sModel'] + '_' + str(dParam['img_size'][0]) + str(dParam['img_size'][1]) + '_lr_'\
+    model_name = './model/' + dParam['sModel'] + '_' + str(dParam['img_size'][0]) + str(dParam['img_size'][1]) + '_lr_' \
                  + str(dParam['lr']) + '_bs_' + str(dParam['batchSize'])
 
     model_all = model_name + '_model.h5'
@@ -58,7 +59,7 @@ def fTrain(dData, dParam):
     model.evaluate(dData['x_valid'], dData['y_valid'], batch_size=dParam['batchSize'], verbose=1)
 
     # save model
-    model.save(model_all, overwrite=True)   # keras > v0.7
+    model.save(model_all, overwrite=True)  # keras > v0.7
 
 
 def fPredict(x_predict, batchSize):

@@ -13,15 +13,12 @@ import cnn_main
 with open('config/param.yml', 'r') as yml_file:
     cfg = yaml.safe_load(yml_file)
 
-# load config params
-sDatafile = cfg['sDatafile']
-
 x_train = []
 y_train = []
 x_predict = []
 
-if glob.glob(sDatafile):
-    f = h5py.File(sDatafile, 'r')
+if glob.glob('./dataset/dataset' + '_' + str(cfg['img_size'][0]) + '.h5'):
+    f = h5py.File('./dataset/dataset' + '_' + str(cfg['img_size'][0]) + '.h5', 'r')
     x_train = np.asarray(f['x_train'])
     y_train = np.asarray(f['y_train'])
     x_predict = np.asarray(f['x_predict'])
