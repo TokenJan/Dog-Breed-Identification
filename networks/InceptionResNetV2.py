@@ -8,7 +8,7 @@ import glob
 
 def addNewLayer(base_model, nClass):
     x = base_model.output
-    x = GlobalAveragePooling2D(x)
+    x = GlobalAveragePooling2D()(x)
     x = BatchNormalization()(x)
     x = Dropout(0.8)(x)
     x = Dense(1024, activation='relu')(x)
