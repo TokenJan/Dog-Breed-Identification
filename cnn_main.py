@@ -3,7 +3,7 @@ from keras.models import load_model
 import pandas as pd
 import glob
 
-def fRunCNN(dData, dParam, nClass, one_hot):
+def fRunCNN(dData, dParam, nClass):
     # dynamic loading of corresponding model
     cnnModel = importlib.import_module('networks.' + dParam['sModel'], '.')
 

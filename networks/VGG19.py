@@ -15,6 +15,8 @@ def creatModel(img_size, nClass):
     x = Dense(1024, activation='relu')(x)
     x = Dropout(0.8)(x)
 
+    predictions = Dense(nClass, activation='softmax')(x)
+
     # This is the model to be train
     model = Model(inputs=base_model.input, outputs=predictions)
 
