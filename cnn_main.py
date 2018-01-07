@@ -11,8 +11,8 @@ def fRunCNN(dData, dParam, nClass):
     cnnModel.fTrain(dData, dParam, nClass)
 
 def fPredict(x_predict, dParam, one_hot, df_predict):
-    model_file = './model/' + dParam['sModel'] + '_' + str(dParam['img_size'][0]) + '_lr_'\
-                 + str(dParam['lr']) + '_bs_' + str(dParam['batchSize']) + '_model.h5'
+    model_file = './model/' + dParam['sModel'] + '_' + str(dParam['img_size'][0]) + '_bs_'\
+                 + str(dParam['batchSize']) + '_model.h5'
 
 
     if glob.glob(model_file):

@@ -2,6 +2,7 @@ from keras.applications.inception_v3 import InceptionV3
 from keras.layers import Flatten, Dense, Dropout
 from keras.models import Model, load_model
 from keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau
+from keras import optimizers
 import glob
 
 
@@ -23,9 +24,13 @@ def createModel(img_size, nClass):
 
     return base_model, model
 
-def fTrain(dData, dParam, nClass):
-    model_file = './model/' + dParam['sModel'] + '_' + str(dParam['img_size'][0]) + '_lr_'\
-                 + str(dParam['lr']) + '_bs_' + str(dParam['batchSize']) + '_model.h5'
+def fTrain(dData, dParam, nClass, lr):
+    for lr in dParam['lr']:
+        fTrainInner(dData, dParam, nClass, lr)
+
+def fTrainInner(dData, dParam, nClass, lr):
+    model_file = './model/' + dParam['sModel'] + '_' + str(dParam['img_size'][0]) + '_bs_'\
+                 + str(dParam['batchSize']) + '_model.h5'
 
     # load the model if it exists
     if glob.glob(model_file):
@@ -39,13 +44,22 @@ def fTrain(dData, dParam, nClass):
             layer.trainable = False
 
         if dParam['sOpti'] == 'rmsprop':
-            model.compile(optimizer='rmsprop', loss='categorical_crossentropy', metrics=['accuracy'])
+            rmsprop = optimizers.rmsprop(lr=lr)
+            model.compile(optimizer=rmsprop,
+                          loss='categorical_crossentropy',
+                          metrics=['accuracy'])
 
         elif dParam['sOpti'] == 'adam':
-            model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+            adam = optimizers.Adam(lr=lr, beta_1=0.9, beta_2=0.999, epsilon=1e-08, decay=0.0)
+            model.compile(optimizer=adam,
+                          loss='categorical_crossentropy',
+                          metrics=['accuracy'])
 
         elif dParam['sOpti'] == 'sgd':
-            model.compile(optimizer='sgd', loss='categorical_crossentropy', metrics=['accuracy'])
+            sgd = optimizers.SGD(lr=lr, momentum=0.9)
+            model.compile(optimizer=sgd,
+                          loss='categorical_crossentropy',
+                          metrics=['accuracy'])
 
     callback_list = [EarlyStopping(monitor='val_loss', patience=5, verbose=1)]
     callback_list.append(ModelCheckpoint(model_file))
@@ -61,10 +75,11 @@ def fTrain(dData, dParam, nClass):
               verbose=1,
               callbacks=callback_list)
 
-    loss_test, acc_test = model.evaluate(dData['x_valid'], dData['y_valid'], batch_size=dParam['batchSize'], verbose=1)
+    metrics = model.evaluate(dData['x_valid'], dData['y_valid'], batch_size=dParam['batchSize'], verbose=1)
 
-    print("test loss: " + loss_test)
-    print("test accuracy: " + acc_test)
+    print('training data results: ')
+    for i in range(len(model.metrics_names)):
+        print(str(model.metrics_names[i]) + ": " + str(metrics[i]))
 
     # save model
     # model.save(model_file, overwrite=True)   # keras > v0.7
