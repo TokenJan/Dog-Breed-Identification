@@ -1,5 +1,5 @@
 from keras.applications.vgg19 import VGG19
-from keras.layers import Flatten, Dense, Dropout
+from keras.layers import Flatten, Dense, Dropout, GlobalAveragePooling2D, BatchNormalization
 from keras.models import Model, load_model
 from keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau
 from keras import optimizers
@@ -11,8 +11,12 @@ def createModel(img_size, nClass):
 
     # Add a new top layer
     x = base_model.output
-    x = Flatten()(x)
-    x = Dropout(0.2)(x)
+    x = GlobalAveragePooling2D()(x)
+    x = BatchNormalization()(x)
+    x = Dropout(0.1)(x)
+    x = Dense(1024, activation='relu')(x)
+    x = BatchNormalization()(x)
+    x = Dropout(0.1)(x)
 
     predictions = Dense(nClass, activation='softmax')(x)
 
