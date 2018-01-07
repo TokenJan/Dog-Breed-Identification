@@ -1,5 +1,5 @@
 from keras.applications.inception_v3 import InceptionV3
-from keras.layers import Flatten, Dense, GlobalAveragePooling2D
+from keras.layers import Flatten, Dense, Dropout
 from keras.models import Model, load_model
 from keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau
 import glob
@@ -11,9 +11,11 @@ def createModel(img_size, nClass):
 
     # Add a new top layer
     x = base_model.output
-    x = GlobalAveragePooling2D()(x)
     x = Flatten()(x)
+    x = Dropout(0.8)(x)
     x = Dense(1024, activation='relu')(x)
+    x = Dropout(0.8)(x)
+
     predictions = Dense(nClass, activation='softmax')(x)
 
     # This is the model to be trained

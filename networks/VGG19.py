@@ -1,5 +1,5 @@
 from keras.applications.vgg19 import VGG19
-from keras.layers import Flatten, Dense
+from keras.layers import Flatten, Dense, Dropout
 from keras.models import Model, load_model
 from keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau
 import glob
@@ -11,7 +11,9 @@ def creatModel(img_size, nClass):
     # Add a new top layer
     x = base_model.output
     x = Flatten()(x)
-    predictions = Dense(nClass, activation='softmax')(x)
+    x = Dropout(0.8)(x)
+    x = Dense(1024, activation='relu')(x)
+    x = Dropout(0.8)(x)
 
     # This is the model to be train
     model = Model(inputs=base_model.input, outputs=predictions)
