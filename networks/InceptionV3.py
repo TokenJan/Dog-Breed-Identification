@@ -14,8 +14,6 @@ def createModel(img_size, nClass):
     x = base_model.output
     x = Flatten()(x)
     x = Dropout(0.8)(x)
-    x = Dense(1024, activation='relu')(x)
-    x = Dropout(0.8)(x)
 
     predictions = Dense(nClass, activation='softmax')(x)
 
