@@ -1,13 +1,11 @@
 from keras.applications.vgg19 import VGG19
 from keras.layers import Flatten, Dense
 from keras.models import Model, load_model
-from keras.callbacks import EarlyStopping, ModelCheckpoint,ReduceLROnPlateau
+from keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau
 import glob
-
 
 def creatModel(img_size, nClass):
     # Create the base pre-trained model
-
     base_model = VGG19(weights='imagenet', include_top=False, input_shape=(img_size[0], img_size[1], 3))
 
     # Add a new top layer
@@ -21,14 +19,12 @@ def creatModel(img_size, nClass):
     return base_model, model
 
 def fTrain(dData, dParam, nClass):
-    model_name = './model/' + dParam['sModel'] + '_' + str(dParam['img_size'][0]) + str(dParam['img_size'][1]) + '_lr_'\
-                 + str(dParam['lr']) + '_bs_' + str(dParam['batchSize'])
-
-    model_all = model_name + '_model.h5'
+    model_file = './model/' + dParam['sModel'] + '_' + str(dParam['img_size'][0]) + '_lr_'\
+                 + str(dParam['lr']) + '_bs_' + str(dParam['batchSize']) + '_model.h5'
 
     # load the model if it exists
-    if glob.glob(model_all):
-        model = load_model(model_all)
+    if glob.glob(model_file):
+        model = load_model(model_file)
     else:
         # initialize the model
         base_model, model = creatModel(dParam['img_size'], nClass)
@@ -47,7 +43,7 @@ def fTrain(dData, dParam, nClass):
             model.compile(optimizer='sgd', loss='categorical_crossentropy', metrics=['accuracy'])
 
     callback_list = [EarlyStopping(monitor='val_loss', patience=5, verbose=1)]
-    callback_list.append(ModelCheckpoint(model_all))
+    callback_list.append(ModelCheckpoint(model_file))
     callback_list.append(ReduceLROnPlateau(monitor='loss', factor=0.5, patience=5, min_lr=1e-4, verbose=1))
 
     model.summary()
@@ -66,8 +62,4 @@ def fTrain(dData, dParam, nClass):
     print("test accuracy: " + acc_test)
 
     # save model
-    model.save(model_all, overwrite=True)   # keras > v0.7
-
-
-def fPredict(x_predict, batchSize):
-    pass
+    # model.save(model_file, overwrite=True)   # keras > v0.7

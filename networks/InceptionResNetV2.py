@@ -1,7 +1,7 @@
 from keras.applications.inception_resnet_v2 import InceptionResNetV2
 from keras.layers import Flatten, Dense, Dropout, GlobalAveragePooling2D
 from keras.models import Model, load_model
-from keras.callbacks import EarlyStopping, ModelCheckpoint,ReduceLROnPlateau
+from keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau
 import glob
 
 # def addNewLayer(base_model, nClass):
@@ -105,6 +105,3 @@ def fTrain(dData, dParam, nClass):
 
     # save model
     model.save(model_all, overwrite=True)  # keras > v0.7
-
-def fPredict(x_predict, batchSize):
-    pass

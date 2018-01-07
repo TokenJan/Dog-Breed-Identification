@@ -1,13 +1,12 @@
 from keras.applications.inception_v3 import InceptionV3
 from keras.layers import Flatten, Dense, GlobalAveragePooling2D
 from keras.models import Model, load_model
-from keras.callbacks import EarlyStopping, ModelCheckpoint,ReduceLROnPlateau
+from keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau
 import glob
 
 
 def createModel(img_size, nClass):
     # Create the base pre-trained model
-
     base_model = InceptionV3(weights='imagenet', include_top=False, input_shape=(img_size[0], img_size[1], 3))
 
     # Add a new top layer
@@ -69,7 +68,3 @@ def fTrain(dData, dParam, nClass):
 
     # save model
     model.save(model_all, overwrite=True)   # keras > v0.7
-
-
-def fPredict(x_predict, batchSize):
-    pass

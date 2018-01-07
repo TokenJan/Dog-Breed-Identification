@@ -4,17 +4,21 @@ import cv2
 import h5py
 from sklearn.model_selection import KFold
 
-# transform jpg pictures and corresponding labels into h5 file
-def fPreprocessData(cfg):
-    # load config param
-    img_size = (cfg['img_size'][0], cfg['img_size'][1])
-
+def fGetOnehot():
     # load csv data
     df_train = pd.read_csv('./input/labels.csv')
     df_predict = pd.read_csv('./input/sample_submission.csv')
 
     targets_series = pd.Series(df_train['breed'])
     one_hot = pd.get_dummies(targets_series, sparse = True)
+
+    return df_train, df_predict, one_hot
+
+# transform jpg pictures and corresponding labels into h5 file
+def fPreprocessData(cfg, df_train, df_predict, one_hot):
+    # load config param
+    img_size = (cfg['img_size'][0], cfg['img_size'][1])
+
     one_hot_labels = np.asarray(one_hot)
 
     # initialize the training and testing variable
@@ -41,7 +45,7 @@ def fPreprocessData(cfg):
         hf.create_dataset("y_train", data=y_train)
         hf.create_dataset("x_predict", data=x_predict)
 
-    return x_train, y_train, x_predict
+    return x_train, y_train, x_predict, one_hot
 
 def crossValid(x_data, y_data, nFolds):
     x_trainFold = []
