@@ -24,8 +24,7 @@ def createModel(img_size, nClass):
 
     return base_model, model
 
-
-def fTrain(dData, dParam, nClass, lr):
+def fTrain(dData, dParam, nClass):
     for lr in dParam['lr']:
         fTrainInner(dData, dParam, nClass, lr)
 

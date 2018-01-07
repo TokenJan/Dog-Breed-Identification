@@ -23,6 +23,10 @@ def createModel(img_size, nClass):
 
     return base_model, model
 
+def fTrain(dData, dParam, nClass):
+    for lr in dParam['lr']:
+        fTrainInner(dData, dParam, nClass, lr)
+
 def fTrainInner(dData, dParam, nClass, lr):
     model_file = './model/' + dParam['sModel'] + '_' + str(dParam['img_size'][0]) + '_bs_'\
                  + str(dParam['batchSize']) + '_model.h5'
