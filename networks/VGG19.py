@@ -1,7 +1,7 @@
 from keras.applications.vgg19 import VGG19
 from keras.layers import Flatten, Dense
 from keras.models import Model, load_model
-import keras
+from keras.callbacks import EarlyStopping, ModelCheckpoint,ReduceLROnPlateau
 import glob
 
 
@@ -46,7 +46,9 @@ def fTrain(dData, dParam, nClass):
         elif dParam['sOpti'] == 'sgd':
             model.compile(optimizer='sgd', loss='categorical_crossentropy', metrics=['accuracy'])
 
-    # callbacks_list = [keras.callbacks.EarlyStopping(monitor='val_acc', patience=3, verbose=1)]
+    callback_list = [EarlyStopping(monitor='val_loss', patience=5, verbose=1)]
+    callback_list.append(ModelCheckpoint(model_all))
+    callback_list.append(ReduceLROnPlateau(monitor='loss', factor=0.5, patience=5, min_lr=1e-4, verbose=1))
 
     model.summary()
 
@@ -55,7 +57,8 @@ def fTrain(dData, dParam, nClass):
               epochs=dParam['epochs'],
               batch_size=dParam['batchSize'],
               validation_split=dParam['validSplit'],
-              verbose=1)
+              verbose=1,
+              callbacks=callback_list)
 
     loss_test, acc_test = model.evaluate(dData['x_valid'], dData['y_valid'], batch_size=dParam['batchSize'], verbose=1)
 

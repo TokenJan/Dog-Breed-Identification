@@ -49,7 +49,7 @@ def crossValid(x_data, y_data, nFolds):
     y_trainFold = []
     y_valFold = []
 
-    kf = KFold(n_splits=nFolds)
+    kf = KFold(n_splits=nFolds, shuffle=True)
     
     for train_index, val_index in kf.split(x_data):
         x_train, x_val = x_data[train_index], x_data[val_index]

@@ -1,9 +1,7 @@
 from keras.applications.inception_resnet_v2 import InceptionResNetV2
 from keras.layers import Flatten, Dense, Dropout, GlobalAveragePooling2D
 from keras.models import Model, load_model
-from keras.layers.normalization import BatchNormalization
-from keras.optimizers import SGD
-import keras
+from keras.callbacks import EarlyStopping, ModelCheckpoint,ReduceLROnPlateau
 import glob
 
 # def addNewLayer(base_model, nClass):
@@ -86,6 +84,10 @@ def fTrain(dData, dParam, nClass):
         elif dParam['sOpti'] == 'sgd':
             model.compile(optimizer='sgd', loss='categorical_crossentropy', metrics=['accuracy'])
 
+    callback_list = [EarlyStopping(monitor='val_loss', patience=5, verbose=1)]
+    callback_list.append(ModelCheckpoint(model_all))
+    callback_list.append(ReduceLROnPlateau(monitor='loss', factor=0.5, patience=5, min_lr=1e-4, verbose=1))
+
     model.summary()
 
     model.fit(dData['x_train'],
@@ -93,7 +95,8 @@ def fTrain(dData, dParam, nClass):
               epochs=dParam['epochs'],
               batch_size=dParam['batchSize'],
               validation_split=dParam['validSplit'],
-              verbose=1)
+              verbose=1,
+              callbacks=callback_list)
 
     loss_test, acc_test = model.evaluate(dData['x_valid'], dData['y_valid'], batch_size=dParam['batchSize'], verbose=1)
 
