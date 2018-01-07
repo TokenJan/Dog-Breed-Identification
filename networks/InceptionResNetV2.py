@@ -14,7 +14,7 @@ def createModel(img_size, nClass):
     # add last new layers
     x = base_model.output
     x = Flatten()(x)
-    x = Dropout(0.8)(x)
+    x = Dropout(0.2)(x)
 
     predictions = Dense(nClass, activation='softmax')(x)
 
