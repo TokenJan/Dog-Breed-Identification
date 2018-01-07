@@ -11,10 +11,9 @@ def fRunCNN(dData, dParam, nClass, one_hot):
     cnnModel.fTrain(dData, dParam, nClass)
 
 def fPredict(x_predict, dParam, one_hot, df_predict):
-    # model_file = './model/' + dParam['sModel'] + '_' + str(dParam['img_size'][0]) + '_lr_'\
-    #              + str(dParam['lr']) + '_bs_' + str(dParam['batchSize']) + '_model.h5'
+    model_file = './model/' + dParam['sModel'] + '_' + str(dParam['img_size'][0]) + '_lr_'\
+                 + str(dParam['lr']) + '_bs_' + str(dParam['batchSize']) + '_model.h5'
 
-    model_file = './model/VGG19_9090_lr_0.001_bs_128_model.h5'
 
     if glob.glob(model_file):
         model = load_model(model_file)
@@ -30,6 +29,7 @@ def fPredict(x_predict, dParam, one_hot, df_predict):
         sub.insert(0, 'id', df_predict['id'])
 
         # save to file
+
         sub.to_csv('./submission/result.csv')
 
     else:
