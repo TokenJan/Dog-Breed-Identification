@@ -3,7 +3,7 @@ img_size: [299, 299]
 lTrain: true
 lCrossval: false
 validSplit: 0.2
-lr: [0.05, 0.01, 0.001]
+lr: [0.001]
 batchSize: 64
 epochs: 30
 sModel: 'InceptionResNetV2'

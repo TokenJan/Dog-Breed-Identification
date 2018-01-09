@@ -106,6 +106,7 @@ test/
 train/
 model/
 input/
+submission/
 
 # exclude vscode file
 .vscode

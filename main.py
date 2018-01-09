@@ -17,8 +17,6 @@ x_train = []
 y_train = []
 x_predict = []
 
-df_train, df_predict, one_hot = datapre.fGetOnehot()
-
 if glob.glob('./dataset/dataset' + '_' + str(cfg['img_size'][0]) + '.h5'):
     f = h5py.File('./dataset/dataset' + '_' + str(cfg['img_size'][0]) + '.h5', 'r')
     x_train = np.asarray(f['x_train'])
@@ -26,8 +24,7 @@ if glob.glob('./dataset/dataset' + '_' + str(cfg['img_size'][0]) + '.h5'):
     x_predict = np.asarray(f['x_predict'])
 
 else:
-
-    x_train, y_train, x_predict, one_hot = datapre.fPreprocessData(cfg, df_train, df_predict, one_hot)
+    x_train, y_train, x_predict = datapre.fPreprocessData(cfg)
 
 # print(x_train.shape)
 # print(y_train.shape)
@@ -61,4 +58,4 @@ if cfg['lTrain']:
         # start training or predicting
         cnn_main.fRunCNN(dData, cfg, nClass)
 else:
-    cnn_main.fPredict(x_predict, cfg, one_hot, df_predict)
+    cnn_main.fPredict(x_predict, cfg)
