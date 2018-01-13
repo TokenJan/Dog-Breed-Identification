@@ -6,22 +6,9 @@ from keras.applications.resnet50 import ResNet50
 
 def run(cfg):
     datagen = ImageDataGenerator(rescale=1. / 255)
+    extractVGG19(datagen, cfg['batchSize'], cfg['img_size'])
     extractInceptionResNetV2(datagen, cfg['batchSize'], cfg['img_size'])
-
-def extractInceptionResNetV2(datagen, batch_size, img_size):
-    # build the InceptionResNetV2 network
-    model = InceptionResNetV2(include_top=False, weights='imagenet')
-
-    generator = datagen.flow_from_directory(
-        directory='./input/train',
-        target_size=(img_size[0], img_size[1]),
-        batch_size=batch_size,
-        class_mode=None,
-        shuffle=False)
-
-    bottleneck_features = model.predict_generator(generator=generator, verbose=1)
-
-    np.save(open('InceptionResNetV2_feature.npy', 'w'), bottleneck_features)
+    extractResNet50(datagen, cfg['batchSize'], cfg['img_size'])
 
 def extractVGG19(datagen, batch_size, img_size):
     # build the VGG19 network
@@ -36,7 +23,22 @@ def extractVGG19(datagen, batch_size, img_size):
 
     bottleneck_features = model.predict_generator(generator=generator, verbose=1)
 
-    np.save(open('VGG19_feature.npy', 'w'), bottleneck_features)
+    np.save(open('./featureVGG19_feature.npy', 'w'), bottleneck_features)
+
+def extractInceptionResNetV2(datagen, batch_size, img_size):
+    # build the InceptionResNetV2 network
+    model = InceptionResNetV2(include_top=False, weights='imagenet')
+
+    generator = datagen.flow_from_directory(
+        directory='./input/train',
+        target_size=(img_size[0], img_size[1]),
+        batch_size=batch_size,
+        class_mode=None,
+        shuffle=False)
+
+    bottleneck_features = model.predict_generator(generator=generator, verbose=1)
+
+    np.save(open('./feature/InceptionResNetV2_feature.npy', 'w'), bottleneck_features)
 
 def extractResNet50(datagen, batch_size, img_size):
     # build the ResNet50 network
@@ -51,4 +53,4 @@ def extractResNet50(datagen, batch_size, img_size):
 
     bottleneck_features = model.predict_generator(generator=generator, verbose=1)
 
-    np.save(open('ResNet50_feature.npy', 'w'), bottleneck_features)
+    np.save(open('./feature/ResNet50_feature.npy', 'w'), bottleneck_features)
