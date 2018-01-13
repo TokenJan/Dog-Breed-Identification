@@ -1,7 +1,8 @@
-nFolds: 5
-img_size: [299, 299]
+lExtractor: true
 lTrain: true
 lCrossval: false
+nFolds: 5
+img_size: [299, 299]
 validSplit: 0.2
 lr: [0.001]
 batchSize: 64

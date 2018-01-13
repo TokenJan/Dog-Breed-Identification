@@ -3,6 +3,22 @@ import pandas as pd
 import cv2
 import h5py
 from sklearn.model_selection import KFold
+import glob
+import os
+
+def sortImg(cfg):
+    df_train = pd.read_csv('./input/labels.csv')
+    lBreed = pd.Series(df_train['breed']).values
+    for i, row in df_train.iterrows():
+        breed = lBreed[i]
+        curr_path = './input/train/{}.jpg'.format(row.id)
+        new_path = './input/train/' + breed + os.sep + row.id + '.jpg'
+        img = cv2.imread(curr_path)
+
+        if not os.path.exists('./input/train/' + breed):
+            os.mkdir('./input/train/' + breed)
+
+        os.rename(curr_path, new_path)
 
 # transform jpg pictures and corresponding labels into h5 file
 def fPreprocessData(cfg):
