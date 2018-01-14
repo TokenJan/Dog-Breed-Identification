@@ -26,7 +26,7 @@ def fTrain(dData, nClass, dParam, sModel):
 
     model.compile(optimizer=dParam['sOpti'], loss='categorical_crossentropy', metrics=['accuracy'])
 
-    callback_list = [EarlyStopping(monitor='val_loss', patience=5, verbose=1)]
+    callback_list = [EarlyStopping(monitor='val_loss', patience=15, verbose=1)]
     callback_list.append(ReduceLROnPlateau(monitor='val_loss', factor=0.5, patience=5, min_lr=0.0001))
     callback_list.append(ModelCheckpoint(model_file))
 

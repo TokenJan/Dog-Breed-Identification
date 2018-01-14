@@ -4,7 +4,7 @@ nFolds: 5
 img_size: [400, 400]
 validSplit: 0.2
 lr: [0.001]
-batchSize: 64
+batchSize: 128
 epochs: 50
-lModel: ['InceptionResNetV2']
+lModel: ['InceptionV3', 'InceptionResNetV2']
 sOpti: 'adam'
