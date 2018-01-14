@@ -1,5 +1,5 @@
 from keras.models import Sequential, load_model
-from keras.layers import Dropout, Flatten, Dense, GlobalAveragePooling2D, BatchNormalization
+from keras.layers import Dropout, Dense, GlobalAveragePooling2D, BatchNormalization
 from keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau
 
 import os

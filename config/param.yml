@@ -1,6 +1,5 @@
 lExtractor: true
 lTrain: true
-lCrossval: true
 nFolds: 5
 img_size: [400, 400]
 validSplit: 0.2
