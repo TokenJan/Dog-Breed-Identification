@@ -47,16 +47,16 @@ elif cfg['lTrain']:
     if cfg['lAssemble']:
         train_data_InceptionV3 = np.load('./feature/InceptionV3_train.npy')
         train_data_InceptionResNetV2 = np.load('./feature/InceptionResNetV2_train.npy')
-        train_data = np.concatenate((train_data_InceptionV3, train_data_InceptionResNetV2), axis=1)
+        train_data_original = np.concatenate((train_data_InceptionV3, train_data_InceptionResNetV2), axis=1)
 
         # get the class lebels for the training data, in the original order
-        train_labels = generator_train.classes
+        train_labels_original = generator_train.classes
         # convert the training labels to categorical vectors
-        train_labels = to_categorical(train_labels, num_classes=nClass)
+        train_labels_original = to_categorical(train_labels_original, num_classes=nClass)
 
         # split training data
         for _ in range(cfg['nFolds']):
-            train_data, valid_data, train_labels, valid_labels = train_test_split(train_data, train_labels,
+            train_data, valid_data, train_labels, valid_labels = train_test_split(train_data_original, train_labels_original,
                                                                                   test_size=cfg['validSplit'],
                                                                                   random_state=1)
 
