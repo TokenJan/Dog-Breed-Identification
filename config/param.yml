@@ -2,7 +2,7 @@ lExtractor: true
 lTrain: true
 lCrossval: false
 nFolds: 5
-img_size: [299, 299]
+img_size: [400, 400]
 validSplit: 0.2
 lr: [0.001]
 batchSize: 64
