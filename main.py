@@ -45,17 +45,14 @@ elif cfg['lTrain']:
     nClass = len(generator_train.class_indices)
 
     if cfg['lAssemble']:
-        train_data = []
-        train_labels = []
-        for sModel in cfg['lModel']:
-            tmp_data = np.load('./feature/{}_train.npy'.format(sModel))
-            train_data = np.concatenate((train_data, tmp_data), axis=0)
+        train_data_InceptionV3 = np.load('./feature/InceptionV3_train.npy')
+        train_data_InceptionResNetV2 = np.load('./feature/InceptionResNetV2_train.npy')
+        train_data = np.concatenate((train_data_InceptionV3, train_data_InceptionResNetV2), axis=1)
 
-            # get the class lebels for the training data, in the original order
-            tmp_labels = generator_train.classes
-            # convert the training labels to categorical vectors
-            tmp_labels = to_categorical(tmp_labels, num_classes=nClass)
-            train_labels = np.concatenate((train_labels, tmp_labels), axis=0)
+        # get the class lebels for the training data, in the original order
+        train_labels = generator_train.classes
+        # convert the training labels to categorical vectors
+        train_labels = to_categorical(train_labels, num_classes=nClass)
 
         # split training data
         for _ in range(cfg['nFolds']):
@@ -92,6 +89,12 @@ elif cfg['lTrain']:
                 cnn_main.fRunCNN(dData, nClass, cfg, sModel)
 
 else:
-    for sModel in cfg['lModel']:
-        predict_data = np.load('./feature/{}_test.npy'.format(sModel))
-        cnn_main.fPredict(predict_data, cfg, sModel)
+    if cfg['lAssemble']:
+        predict_data_InceptionV3 = np.load('./feature/InceptionV3_train.npy')
+        predict_data_InceptionResNetV2 = np.load('./feature/InceptionResNetV2_train.npy')
+        predict_data = np.concatenate((predict_data_InceptionV3, predict_data_InceptionResNetV2), axis=1)
+        cnn_main.fPredict(predict_data, cfg, 'assemble')
+    else:
+        for sModel in cfg['lModel']:
+            predict_data = np.load('./feature/{}_test.npy'.format(sModel))
+            cnn_main.fPredict(predict_data, cfg, sModel)

@@ -11,7 +11,6 @@ def run(cfg, generator_train, generator_test):
         # build the InceptionV3 network
         model_train = InceptionV3(include_top=False, weights='imagenet', pooling='avg')
         file_train = './feature/InceptionV3_train.npy'
-        model_train.summary()
         bottleneck_features_train = model_train.predict_generator(generator=generator_train, verbose=1)
         np.save(open(file_train, 'w'), bottleneck_features_train)
         print('InceptionV3 train bottleneck feature: {}'.format(bottleneck_features_train.shape))
@@ -26,7 +25,6 @@ def run(cfg, generator_train, generator_test):
         # build the InceptionResNetV2 network
         model_train = InceptionResNetV2(include_top=False, weights='imagenet', pooling='avg')
         file_train = './feature/InceptionResNetV2_train.npy'
-        model_train.summary()
         bottleneck_features_train = model_train.predict_generator(generator=generator_train, verbose=1)
         np.save(open(file_train, 'w'), bottleneck_features_train)
         print('InceptionResNetV2 train bottleneck feature: {}'.format(bottleneck_features_train.shape))
