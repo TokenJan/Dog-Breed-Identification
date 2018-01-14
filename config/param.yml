@@ -6,6 +6,6 @@ img_size: [299, 299]
 validSplit: 0.2
 lr: [0.001]
 batchSize: 64
-epochs: 30
-sModel: 'InceptionResNetV2'
+epochs: 50
+lModel: ['VGG19', 'InceptionResNetV2', 'ResNet50']
 sOpti: 'adam'
