@@ -1,6 +1,8 @@
-from keras.models import Sequential
+from keras.models import Sequential, load_model
 from keras.layers import Dropout, Flatten, Dense, GlobalAveragePooling2D, BatchNormalization
 from keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau
+
+import os
 
 def creatModel(dData, nClass):
     model = Sequential()
@@ -17,7 +19,10 @@ def fTrain(dData, nClass, dParam, sModel):
     model_file = './model/' + sModel + '_' + str(dParam['img_size'][0]) + '_bs_' \
                  + str(dParam['batchSize']) + '_model.h5'
 
-    model = creatModel(dData, nClass)
+    if os.path.exists(model_file):
+        model = load_model(model_file)
+    else:
+        model = creatModel(dData, nClass)
 
     model.compile(optimizer=dParam['sOpti'], loss='categorical_crossentropy', metrics=['accuracy'])
 
