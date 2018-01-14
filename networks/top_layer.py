@@ -1,5 +1,5 @@
 from keras.models import Sequential, load_model
-from keras.layers import Dropout, Dense, GlobalAveragePooling2D, BatchNormalization
+from keras.layers import Dropout, Dense, BatchNormalization
 from keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau
 
 import os
@@ -26,7 +26,7 @@ def fTrain(dData, nClass, dParam, sModel):
     model.compile(optimizer=dParam['sOpti'], loss='categorical_crossentropy', metrics=['accuracy'])
 
     callback_list = [EarlyStopping(monitor='val_loss', patience=15, verbose=1)]
-    callback_list.append(ReduceLROnPlateau(monitor='val_loss', factor=0.5, patience=5))
+    callback_list.append(ReduceLROnPlateau(monitor='val_loss', factor=0.5, patience=5, verbose=1))
     callback_list.append(ModelCheckpoint(model_file))
 
     model.fit(dData['train_data'], dData['train_labels'],
