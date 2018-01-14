@@ -5,6 +5,7 @@ import numpy as np
 from keras.preprocessing.image import ImageDataGenerator
 from keras.utils.np_utils import to_categorical
 from sklearn.model_selection import train_test_split
+from sklearn.model_selection import KFold
 
 # internal import
 import utils.DataPreprocessing as datapre
@@ -54,11 +55,28 @@ elif cfg['lTrain']:
         train_labels = to_categorical(train_labels, num_classes=nClass)
 
         # split training data
-        train_data, valid_data, train_labels, valid_labels = train_test_split(train_data, train_labels, test_size=cfg['validSplit'], random_state=1)
+        if cfg['lCrossval']:
+            x_trainFold = []
+            x_valFold = []
+            y_trainFold = []
+            y_valFold = []
+            kf = KFold(n_splits=cfg['nFolds'])
 
-        dData = {'train_data': train_data, 'valid_data': valid_data, 'train_labels': train_labels, 'valid_labels': valid_labels}
+            for train_index, val_index in kf.split(train_data):
+                x_train, x_val = train_data[train_index], train_data[val_index]
+                y_train, y_val = train_labels[train_index], train_labels[val_index]
 
-        cnn_main.fRunCNN(dData, nClass, cfg, sModel)
+                dData = {'train_data': x_train, 'valid_data': x_val, 'train_labels': y_train,
+                         'valid_labels': y_val}
+
+                cnn_main.fRunCNN(dData, nClass, cfg, sModel)
+
+        else:
+            train_data, valid_data, train_labels, valid_labels = train_test_split(train_data, train_labels, test_size=cfg['validSplit'], random_state=1)
+
+            dData = {'train_data': train_data, 'valid_data': valid_data, 'train_labels': train_labels, 'valid_labels': valid_labels}
+
+            cnn_main.fRunCNN(dData, nClass, cfg, sModel)
 
 else:
     for sModel in cfg['lModel']:

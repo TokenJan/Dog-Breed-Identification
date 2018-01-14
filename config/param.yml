@@ -1,11 +1,11 @@
 lExtractor: true
 lTrain: true
-lCrossval: false
+lCrossval: true
 nFolds: 5
 img_size: [400, 400]
 validSplit: 0.2
 lr: [0.001]
 batchSize: 64
 epochs: 50
-lModel: ['VGG19', 'InceptionResNetV2', 'ResNet50']
+lModel: ['InceptionResNetV2']
 sOpti: 'adam'
