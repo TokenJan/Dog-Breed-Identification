@@ -10,29 +10,29 @@ def run(cfg, generator_train, generator_test):
 
     if sModel == 'VGG19':
         # build the VGG19 network
-        if os.path.exists('./feature/VGG19_train.npy'):
+        if not os.path.exists('./feature/VGG19_train.npy'):
             model_train = VGG19(include_top=False, weights='imagenet')
             file_train = './feature/VGG19_train.npy'
 
-        if os.path.exists('./feature/VGG19_test.npy'):
+        if not os.path.exists('./feature/VGG19_test.npy'):
             model_test = VGG19(include_top=False, weights='imagenet')
             file_test = './feature/VGG19_test.npy'
     elif sModel == 'InceptionResNetV2':
         # build the InceptionResNetV2 network
-        if os.path.exists('./feature/InceptionResNetV2_train.npy'):
+        if not os.path.exists('./feature/InceptionResNetV2_train.npy'):
             model_train = InceptionResNetV2(include_top=False, weights='imagenet')
             file_train = './feature/InceptionResNetV2_train.npy'
 
-        if os.path.exists('./feature/InceptionResNetV2_test.npy'):
+        if not os.path.exists('./feature/InceptionResNetV2_test.npy'):
             model_test = InceptionResNetV2(include_top=False, weights='imagenet')
             file_test = './feature/InceptionResNetV2_test.npy'
     elif sModel == 'ResNet50':
         # build the ResNet50 network
-        if os.path.exists('./feature/ResNet50_train.npy'):
+        if not os.path.exists('./feature/ResNet50_train.npy'):
             model_train = ResNet50(include_top=False, weights='imagenet')
             file_train = './feature/ResNet50_train.npy'
 
-        if os.path.exists('./feature/ResNet50_test.npy'):
+        if not os.path.exists('./feature/ResNet50_test.npy'):
             model_train = ResNet50(include_top=False, weights='imagenet')
             file_test = './feature/ResNet50_test.npy'
     else:
