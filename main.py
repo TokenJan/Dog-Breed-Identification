@@ -44,23 +44,52 @@ elif cfg['lTrain']:
     nTrain = len(generator_train.filenames)
     nClass = len(generator_train.class_indices)
 
-    # load the bottleneck features saved earlier
-    for sModel in cfg['lModel']:
-        train_data = np.load('./feature/{}_train.npy'.format(sModel))
+    if cfg['lAssemble']:
+        train_data = []
+        train_labels = []
+        for sModel in cfg['lModel']:
+            tmp_data = np.load('./feature/{}_train.npy'.format(sModel))
+            train_data = np.concatenate((train_data, tmp_data), axis=0)
 
-        # get the class lebels for the training data, in the original order
-        train_labels = generator_train.classes
-
-        # convert the training labels to categorical vectors
-        train_labels = to_categorical(train_labels, num_classes=nClass)
+            # get the class lebels for the training data, in the original order
+            tmp_labels = generator_train.classes
+            # convert the training labels to categorical vectors
+            tmp_labels = to_categorical(tmp_labels, num_classes=nClass)
+            train_labels = np.concatenate((train_labels, tmp_labels), axis=0)
 
         # split training data
         for _ in range(cfg['nFolds']):
-            train_data, valid_data, train_labels, valid_labels = train_test_split(train_data, train_labels, test_size=cfg['validSplit'], random_state=1)
+            train_data, valid_data, train_labels, valid_labels = train_test_split(train_data, train_labels,
+                                                                                  test_size=cfg['validSplit'],
+                                                                                  random_state=1)
 
-            dData = {'train_data': train_data, 'valid_data': valid_data, 'train_labels': train_labels, 'valid_labels': valid_labels}
+            dData = {'train_data': train_data, 'valid_data': valid_data, 'train_labels': train_labels,
+                     'valid_labels': valid_labels}
 
-            cnn_main.fRunCNN(dData, nClass, cfg, sModel)
+            cnn_main.fRunCNN(dData, nClass, cfg, 'assemble')
+
+
+    else:
+        # load the bottleneck features saved earlier
+        for sModel in cfg['lModel']:
+            train_data = np.load('./feature/{}_train.npy'.format(sModel))
+
+            # get the class lebels for the training data, in the original order
+            train_labels = generator_train.classes
+
+            # convert the training labels to categorical vectors
+            train_labels = to_categorical(train_labels, num_classes=nClass)
+
+            # split training data
+            for _ in range(cfg['nFolds']):
+                train_data, valid_data, train_labels, valid_labels = train_test_split(train_data, train_labels,
+                                                                                      test_size=cfg['validSplit'],
+                                                                                      random_state=1)
+
+                dData = {'train_data': train_data, 'valid_data': valid_data, 'train_labels': train_labels,
+                         'valid_labels': valid_labels}
+
+                cnn_main.fRunCNN(dData, nClass, cfg, sModel)
 
 else:
     for sModel in cfg['lModel']:

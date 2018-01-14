@@ -16,7 +16,7 @@ def run(cfg, generator_train, generator_test):
         np.save(open(file_train, 'w'), bottleneck_features_train)
         print('InceptionV3 train bottleneck feature: {}'.format(bottleneck_features_train.shape))
 
-        model_test = InceptionV3(include_top=False, weights='imagenet')
+        model_test = InceptionV3(include_top=False, weights='imagenet', pooling='avg')
         file_test = './feature/InceptionV3_test.npy'
         bottleneck_features_test = model_test.predict_generator(generator=generator_test, verbose=1)
         np.save(open(file_test, 'w'), bottleneck_features_test)
@@ -24,7 +24,7 @@ def run(cfg, generator_train, generator_test):
 
     if 'InceptionResNetV2' in lModel:
         # build the InceptionResNetV2 network
-        model_train = InceptionResNetV2(include_top=False, weights='imagenet')
+        model_train = InceptionResNetV2(include_top=False, weights='imagenet', pooling='avg')
         file_train = './feature/InceptionResNetV2_train.npy'
         model_train.summary()
         bottleneck_features_train = model_train.predict_generator(generator=generator_train, verbose=1)

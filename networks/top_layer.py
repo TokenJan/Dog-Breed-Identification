@@ -6,8 +6,7 @@ import os
 
 def creatModel(dData, nClass):
     model = Sequential()
-    model.add(GlobalAveragePooling2D(input_shape=dData['train_data'].shape[1:]))
-    model.add(BatchNormalization())
+    model.add(BatchNormalization(input_shape=dData['train_data'].shape[1:]))
     model.add(Dense(1024, activation='relu'))
     model.add(BatchNormalization())
     model.add(Dropout(0.5))

@@ -1,5 +1,6 @@
 lExtractor: true
 lTrain: true
+lAssemble: false
 nFolds: 5
 img_size: [400, 400]
 validSplit: 0.2
