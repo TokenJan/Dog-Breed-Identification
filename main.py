@@ -90,8 +90,8 @@ elif cfg['lTrain']:
 
 else:
     if cfg['lAssemble']:
-        predict_data_InceptionV3 = np.load('./feature/InceptionV3_train.npy')
-        predict_data_InceptionResNetV2 = np.load('./feature/InceptionResNetV2_train.npy')
+        predict_data_InceptionV3 = np.load('./feature/InceptionV3_test.npy')
+        predict_data_InceptionResNetV2 = np.load('./feature/InceptionResNetV2_test.npy')
         predict_data = np.concatenate((predict_data_InceptionV3, predict_data_InceptionResNetV2), axis=1)
         cnn_main.fPredict(predict_data, cfg, 'assemble')
     else:
