@@ -1,56 +1,45 @@
 import numpy as np
-from keras.preprocessing.image import ImageDataGenerator
+import sys
+import os
 from keras.applications.vgg19 import VGG19
 from keras.applications.inception_resnet_v2 import InceptionResNetV2
 from keras.applications.resnet50 import ResNet50
 
-def run(cfg):
-    datagen = ImageDataGenerator(rescale=1. / 255)
-    extractVGG19(datagen, cfg['batchSize'], cfg['img_size'])
-    extractInceptionResNetV2(datagen, cfg['batchSize'], cfg['img_size'])
-    extractResNet50(datagen, cfg['batchSize'], cfg['img_size'])
+def run(cfg, generator_train, generator_test):
+    sModel = cfg['sModel']
 
-def extractVGG19(datagen, batch_size, img_size):
-    # build the VGG19 network
-    model = VGG19(include_top=False, weights='imagenet')
+    if sModel == 'VGG19':
+        # build the VGG19 network
+        if os.path.exists('./feature/VGG19_train.npy'):
+            model_train = VGG19(include_top=False, weights='imagenet')
+            file_train = './feature/VGG19_train.npy'
 
-    generator = datagen.flow_from_directory(
-        directory='./input/train',
-        target_size=(img_size[0], img_size[1]),
-        batch_size=batch_size,
-        class_mode='categorical',
-        shuffle=False)
+        if os.path.exists('./feature/VGG19_test.npy'):
+            model_test = VGG19(include_top=False, weights='imagenet')
+            file_test = './feature/VGG19_test.npy'
+    elif sModel == 'InceptionResNetV2':
+        # build the InceptionResNetV2 network
+        if os.path.exists('./feature/InceptionResNetV2_train.npy'):
+            model_train = InceptionResNetV2(include_top=False, weights='imagenet')
+            file_train = './feature/InceptionResNetV2_train.npy'
 
-    bottleneck_features = model.predict_generator(generator=generator, verbose=1)
+        if os.path.exists('./feature/InceptionResNetV2_test.npy'):
+            model_test = InceptionResNetV2(include_top=False, weights='imagenet')
+            file_test = './feature/InceptionResNetV2_test.npy'
+    elif sModel == 'ResNet50':
+        # build the ResNet50 network
+        if os.path.exists('./feature/ResNet50_train.npy'):
+            model_train = ResNet50(include_top=False, weights='imagenet')
+            file_train = './feature/ResNet50_train.npy'
 
-    np.save(open('./feature/VGG19_train.npy', 'w'), bottleneck_features)
+        if os.path.exists('./feature/ResNet50_test.npy'):
+            model_train = ResNet50(include_top=False, weights='imagenet')
+            file_test = './feature/ResNet50_test.npy'
+    else:
+        sys.exit('Model is not supported.')
 
-def extractInceptionResNetV2(datagen, batch_size, img_size):
-    # build the InceptionResNetV2 network
-    model = InceptionResNetV2(include_top=False, weights='imagenet')
+    bottleneck_features = model_train.predict_generator(generator=generator_train, verbose=1)
+    np.save(open(file_train, 'w'), bottleneck_features)
 
-    generator = datagen.flow_from_directory(
-        directory='./input/train',
-        target_size=(img_size[0], img_size[1]),
-        batch_size=batch_size,
-        class_mode='categorical',
-        shuffle=False)
-
-    bottleneck_features = model.predict_generator(generator=generator, verbose=1)
-
-    np.save(open('./feature/InceptionResNetV2_train.npy', 'w'), bottleneck_features)
-
-def extractResNet50(datagen, batch_size, img_size):
-    # build the ResNet50 network
-    model = ResNet50(include_top=False, weights='imagenet')
-
-    generator = datagen.flow_from_directory(
-        directory='./input/train',
-        target_size=(img_size[0], img_size[1]),
-        batch_size=batch_size,
-        class_mode='categorical',
-        shuffle=False)
-
-    bottleneck_features = model.predict_generator(generator=generator, verbose=1)
-
-    np.save(open('./feature/ResNet50_train.npy', 'w'), bottleneck_features)
+    bottleneck_features = model_test.predict_generator(generator=generator_train, verbose=1)
+    np.save(open(file_test, 'w'), bottleneck_features)

@@ -1,64 +1,68 @@
 # external import
 import yaml
-import h5py
 import glob
 import numpy as np
+from keras.preprocessing.image import ImageDataGenerator
+from keras.utils.np_utils import to_categorical
 from sklearn.model_selection import train_test_split
-import utils.FeatureExtractor as feature_extractor
 
 # internal import
 import utils.DataPreprocessing as datapre
+import utils.FeatureExtractor as feature_extractor
 import cnn_main
 
 # load param configuration
 with open('config/param.yml', 'r') as yml_file:
     cfg = yaml.safe_load(yml_file)
 
+# initialize the data generator
+img_size = cfg['img_size']
+batch_size = cfg['batchSize']
+datagen = ImageDataGenerator(rescale=1. / 255)
+generator_train = datagen.flow_from_directory(
+    directory='./input/train',
+    target_size=(img_size[0], img_size[1]),
+    batch_size=batch_size,
+    class_mode='categorical',
+    shuffle=False)
+
+generator_test = datagen.flow_from_directory(
+    directory='./input/test',
+    target_size=(img_size[0], img_size[1]),
+    batch_size=batch_size,
+    class_mode=None,
+    shuffle=False)
+
 if glob.glob('./input/train/*.jpg'):
     datapre.sortImg(cfg)
 
 if cfg['lExtractor']:
-    feature_extractor.run(cfg)
+    feature_extractor.run(cfg, generator_train, generator_test)
+
+elif cfg['lTrain']:
+    nTrain = len(generator_train.filenames)
+    nClass = len(generator_train.class_indices)
+
+    # load the bottleneck features saved earlier
+    # VGG19_feature = np.load('./feature/VGG19_train.npy')
+    # InceptionResNetV2_feature = np.load('./feature/InceptionResNetV2_train.npy')
+    # ResNet50_feature = np.load('./feature/ResNet50_train.npy')
+    # train_data = np.concatenate([VGG19_feature, InceptionResNetV2_feature, ResNet50_feature], axis=-1)
+    train_data = np.load('./feature/InceptionResNetV2_train.npy')
+
+    # get the class lebels for the training data, in the original order
+    train_labels = generator_train.classes
+
+    # convert the training labels to categorical vectors
+    train_labels = to_categorical(train_labels, num_classes=nClass)
+
+    # split training data
+    train_data, valid_data, train_labels, valid_labels = train_test_split(train_data, train_labels, test_size=cfg['validSplit'], random_state=1)
+
+    dData = {'train_data': train_data, 'valid_data': valid_data, 'train_labels': train_labels, 'valid_labels': valid_labels}
+
+    cnn_main.fRunCNN(dData, nClass, cfg)
+
 else:
-    x_train = []
-    y_train = []
-    x_predict = []
 
-    if glob.glob('./dataset/dataset' + '_' + str(cfg['img_size'][0]) + '.h5'):
-        f = h5py.File('./dataset/dataset' + '_' + str(cfg['img_size'][0]) + '.h5', 'r')
-        x_train = np.asarray(f['x_train'])
-        y_train = np.asarray(f['y_train'])
-        x_predict = np.asarray(f['x_predict'])
-
-    else:
-        x_train, y_train, x_predict = datapre.fPreprocessData(cfg)
-
-    # number of the classes
-    nClass = y_train.shape[1]
-    #print(nClass)
-
-    if cfg['lTrain']:
-        if cfg['lCrossval']:
-            # cross validation
-            x_trainFold, y_trainFold, x_validFold, y_validFold  = datapre.crossValid(x_train, y_train, cfg['nFolds'])
-
-            for iFold in range(cfg['nFolds']):
-                # initialize training, validation and test data dictionary
-                dData = {'x_train': x_trainFold[iFold], 'y_train': y_trainFold[iFold], 'x_valid': x_validFold[iFold],
-                         'y_valid': y_validFold[iFold], 'x_predict': x_predict}
-
-                # start training or predicting
-                cnn_main.fRunCNN(dData, cfg, nClass)
-
-        else:
-            # split training data
-            x_train, x_valid, y_train, y_valid = train_test_split(x_train, y_train, test_size=cfg['validSplit'], random_state=1)
-
-            # initialize training, validation and test data dictionary
-            dData = {'x_train': x_train, 'y_train': y_train, 'x_valid': x_valid, 'y_valid': y_valid, 'x_predict': x_predict}
-
-
-            # start training or predicting
-            cnn_main.fRunCNN(dData, cfg, nClass)
-    else:
-        cnn_main.fPredict(x_predict, cfg)
+    cnn_main.fPredict(predict_data, cfg)

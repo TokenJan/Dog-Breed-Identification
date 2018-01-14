@@ -1,14 +1,11 @@
-import importlib
+from networks import top_layer
 from keras.models import load_model
 import pandas as pd
 import glob
 
-def fRunCNN(dData, dParam, nClass):
-    # dynamic loading of corresponding model
-    cnnModel = importlib.import_module('networks.' + dParam['sModel'], '.')
-
+def fRunCNN(dData, nClass, cfg):
     # training process
-    cnnModel.fTrain(dData, dParam, nClass)
+    top_layer.fTrain(dData, nClass, cfg)
 
 def fPredict(x_predict, dParam):
     model_file = './model/' + dParam['sModel'] + '_' + str(dParam['img_size'][0]) + '_bs_'\
