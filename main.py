@@ -78,10 +78,10 @@ elif cfg['lTrain']:
             train_labels = to_categorical(train_labels, num_classes=nClass)
 
             # split training data
-            for _ in range(cfg['nFolds']):
+            for i in range(cfg['nFolds']):
                 train_data, valid_data, train_labels, valid_labels = train_test_split(train_data, train_labels,
                                                                                       test_size=cfg['validSplit'],
-                                                                                      random_state=1)
+                                                                                      random_state=i)
 
                 dData = {'train_data': train_data, 'valid_data': valid_data, 'train_labels': train_labels,
                          'valid_labels': valid_labels}
