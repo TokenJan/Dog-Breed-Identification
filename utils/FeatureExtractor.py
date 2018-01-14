@@ -38,8 +38,8 @@ def run(cfg, generator_train, generator_test):
     else:
         sys.exit('Model is not supported.')
 
-    bottleneck_features = model_train.predict_generator(generator=generator_train, verbose=1)
-    np.save(open(file_train, 'w'), bottleneck_features)
-
-    bottleneck_features = model_test.predict_generator(generator=generator_train, verbose=1)
-    np.save(open(file_test, 'w'), bottleneck_features)
+    bottleneck_features_train = model_train.predict_generator(generator=generator_train, verbose=1)
+    bottleneck_features_test = model_test.predict_generator(generator=generator_test, verbose=1)
+    
+    np.save(open(file_train, 'w'), bottleneck_features_train)
+    np.save(open(file_test, 'w'), bottleneck_features_test)
