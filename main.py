@@ -44,25 +44,23 @@ elif cfg['lTrain']:
     nClass = len(generator_train.class_indices)
 
     # load the bottleneck features saved earlier
-    # VGG19_feature = np.load('./feature/VGG19_train.npy')
-    # InceptionResNetV2_feature = np.load('./feature/InceptionResNetV2_train.npy')
-    # ResNet50_feature = np.load('./feature/ResNet50_train.npy')
-    # train_data = np.concatenate([VGG19_feature, InceptionResNetV2_feature, ResNet50_feature], axis=-1)
-    train_data = np.load('./feature/InceptionResNetV2_train.npy')
+    for sModel in cfg['lModel']:
+        train_data = np.load('./feature/{}_train.npy'.format(sModel))
 
-    # get the class lebels for the training data, in the original order
-    train_labels = generator_train.classes
+        # get the class lebels for the training data, in the original order
+        train_labels = generator_train.classes
 
-    # convert the training labels to categorical vectors
-    train_labels = to_categorical(train_labels, num_classes=nClass)
+        # convert the training labels to categorical vectors
+        train_labels = to_categorical(train_labels, num_classes=nClass)
 
-    # split training data
-    train_data, valid_data, train_labels, valid_labels = train_test_split(train_data, train_labels, test_size=cfg['validSplit'], random_state=1)
+        # split training data
+        train_data, valid_data, train_labels, valid_labels = train_test_split(train_data, train_labels, test_size=cfg['validSplit'], random_state=1)
 
-    dData = {'train_data': train_data, 'valid_data': valid_data, 'train_labels': train_labels, 'valid_labels': valid_labels}
+        dData = {'train_data': train_data, 'valid_data': valid_data, 'train_labels': train_labels, 'valid_labels': valid_labels}
 
-    cnn_main.fRunCNN(dData, nClass, cfg)
+        cnn_main.fRunCNN(dData, nClass, cfg, sModel)
 
 else:
-
-    cnn_main.fPredict(predict_data, cfg)
+    for sModel in cfg['lModel']:
+        predict_data = np.load('./feature/{}_test.npy'.format(sModel))
+        cnn_main.fPredict(predict_data, cfg, sModel)

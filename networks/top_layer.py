@@ -14,8 +14,8 @@ def creatModel(dData, nClass):
 
     return model
 
-def fTrain(dData, nClass, dParam):
-    model_file = './model/' + dParam['sModel'] + '_' + str(dParam['img_size'][0]) + '_bs_' \
+def fTrain(dData, nClass, dParam, sModel):
+    model_file = './model/' + sModel + '_' + str(dParam['img_size'][0]) + '_bs_' \
                  + str(dParam['batchSize']) + '_model.h5'
 
     model = creatModel(dData, nClass)

@@ -3,12 +3,12 @@ from keras.models import load_model
 import pandas as pd
 import glob
 
-def fRunCNN(dData, nClass, cfg):
+def fRunCNN(dData, nClass, cfg, sModel):
     # training process
-    top_layer.fTrain(dData, nClass, cfg)
+    top_layer.fTrain(dData, nClass, cfg, sModel)
 
-def fPredict(x_predict, dParam):
-    model_file = './model/' + dParam['sModel'] + '_' + str(dParam['img_size'][0]) + '_bs_'\
+def fPredict(x_predict, dParam, sModel):
+    model_file = './model/' + sModel + '_' + str(dParam['img_size'][0]) + '_bs_'\
                  + str(dParam['batchSize']) + '_model.h5'
 
 
@@ -22,7 +22,7 @@ def fPredict(x_predict, dParam):
             df[c] = y_predict[:, i]
 
         # save to file
-        df.to_csv('./submission/pred.csv', index=None)
+        df.to_csv('./submission/{}.csv'.format(sModel), index=None)
 
     else:
         print('no such model')
