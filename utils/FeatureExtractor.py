@@ -18,12 +18,12 @@ def extractVGG19(datagen, batch_size, img_size):
         directory='./input/train',
         target_size=(img_size[0], img_size[1]),
         batch_size=batch_size,
-        class_mode=None,
+        class_mode='categorical',
         shuffle=False)
 
     bottleneck_features = model.predict_generator(generator=generator, verbose=1)
 
-    np.save(open('./featureVGG19_feature.npy', 'w'), bottleneck_features)
+    np.save(open('./feature/VGG19_train.npy', 'w'), bottleneck_features)
 
 def extractInceptionResNetV2(datagen, batch_size, img_size):
     # build the InceptionResNetV2 network
@@ -33,12 +33,12 @@ def extractInceptionResNetV2(datagen, batch_size, img_size):
         directory='./input/train',
         target_size=(img_size[0], img_size[1]),
         batch_size=batch_size,
-        class_mode=None,
+        class_mode='categorical',
         shuffle=False)
 
     bottleneck_features = model.predict_generator(generator=generator, verbose=1)
 
-    np.save(open('./feature/InceptionResNetV2_feature.npy', 'w'), bottleneck_features)
+    np.save(open('./feature/InceptionResNetV2_train.npy', 'w'), bottleneck_features)
 
 def extractResNet50(datagen, batch_size, img_size):
     # build the ResNet50 network
@@ -48,9 +48,9 @@ def extractResNet50(datagen, batch_size, img_size):
         directory='./input/train',
         target_size=(img_size[0], img_size[1]),
         batch_size=batch_size,
-        class_mode=None,
+        class_mode='categorical',
         shuffle=False)
 
     bottleneck_features = model.predict_generator(generator=generator, verbose=1)
 
-    np.save(open('./feature/ResNet50_feature.npy', 'w'), bottleneck_features)
+    np.save(open('./feature/ResNet50_train.npy', 'w'), bottleneck_features)
